@@ -2,8 +2,7 @@ package companies
 
 import (
 	"company_service/models/company"
-	"company_service/schemas/companyschemas"
-	"fmt"
+	"company_service/schemas"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,10 +13,14 @@ func GetCompanies(c *gin.Context) {
 	var companies []company.Company
 
 	result := companyObject.SelectAll(&companies)
+
 	if result.Error == nil {
-		c.JSON(200, gin.H{
-			"companies": companies,
-		})
+		schemas.CompaniesSerializer(&companies)
+	}
+
+	if result.Error == nil {
+		data := schemas.CompaniesSerializer(&companies)
+		c.JSON(200, data)
 	} else {
 		c.JSON(404, gin.H{"message": "not found"})
 	}
@@ -29,11 +32,9 @@ func GetByID(c *gin.Context) {
 	id := c.Param("id")
 	result := companyObject.Select(id)
 
-	companyschemas.Serializer(&companyObject)
-
-	fmt.Println("HEREEEEE")
 	if result.Error == nil {
-		c.SecureJSON(200, companyObject)
+		data := schemas.CompanySerializer(&companyObject)
+		c.SecureJSON(200, data)
 	} else {
 		c.SecureJSON(404, gin.H{"message": "not found"})
 	}
