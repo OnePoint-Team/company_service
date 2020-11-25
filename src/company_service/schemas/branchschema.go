@@ -2,21 +2,17 @@ package schemas
 
 import (
 	"company_service/models/branch"
-	"encoding/json"
-	"fmt"
-	"log"
 )
 
-// Serializer to serialize object
-func BranchSerializer(b *branch.Branch) {
-	var jsonData []byte
-	jsonData, err := json.Marshal(b)
-	if err != nil {
-		log.Println(err)
-	}
-	for key, value := range jsonData {
-		fmt.Println("Key:", key, "Value:", value)
-	}
-	// fmt.Println("jsonData --->", string(jsonData))
+// BranchSerializer to serialize Branch object
+func BranchSerializer(b *branch.Branch) map[string]interface{} {
+	data := make(map[string]interface{})
 
+	data["id"] = b.Base.ID
+	data["created"] = b.Base.CreatedAt
+	data["created"] = b.Base.UpdatedAt
+	data["company_id"] = b.CompanyID
+	data["name"] = b.Name
+
+	return data
 }

@@ -20,7 +20,7 @@ type Base struct {
 
 // Branch struct
 type Branch struct {
-	Base      Base      `json:"-" gorm:"embedded"`
+	Base      Base      `gorm:"embedded"`
 	Name      string    `gorm:"column:name;size:128;not null;"`
 	CompanyID uuid.UUID `json:"-"`
 }
