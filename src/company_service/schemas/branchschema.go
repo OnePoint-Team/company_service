@@ -13,6 +13,5 @@ func BranchSerializer(b *branch.Branch) map[string]interface{} {
 	data["created"] = b.Base.UpdatedAt
 	data["company_id"] = b.CompanyID
 	data["name"] = b.Name
-
 	return data
 }
