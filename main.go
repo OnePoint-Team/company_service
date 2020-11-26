@@ -5,6 +5,7 @@ import (
 	"company_service/models/branch"
 	"company_service/models/company"
 	"company_service/routes/companies"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +13,8 @@ import (
 func migrate() {
 	// Migration
 	db := initDB.InitDB()
-	db.AutoMigrate(&company.Company{}, &branch.Branch{})
+	err := db.AutoMigrate(&company.Company{}, &branch.Branch{})
+	fmt.Println("err->", err)
 
 }
 func insert_into_company() {
@@ -41,18 +43,13 @@ func select_test() {
 }
 
 func main() {
-	// c := company.Company{Name: "Optimal"}
-	// c.Insert()
-
-	// d := company.Company{Name: "BakuElectronics"}
-	// d.Insert()
-
-	// z := company.Company{Name: "Kontakt"}
-	// z.Insert()
 
 	r := gin.Default()
 	r.GET("/", companies.GetCompanies)
+	r.POST("/", companies.POSTCompanies)
+
 	r.GET("/:id", companies.GetByID)
+
 	r.Run()
 
 }

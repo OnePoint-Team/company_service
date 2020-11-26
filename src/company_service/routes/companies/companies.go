@@ -3,6 +3,9 @@ package companies
 import (
 	"company_service/models/company"
 	"company_service/schemas"
+	"encoding/json"
+	"io/ioutil"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
@@ -38,4 +41,29 @@ func GetCompanies(c *gin.Context) {
 	} else {
 		c.JSON(404, gin.H{"message": "not found"})
 	}
+}
+
+// POSTCompanies gets
+func POSTCompanies(c *gin.Context) {
+	body, _ := ioutil.ReadAll(c.Request.Body)
+
+	var obj map[string]interface{}
+	err := json.Unmarshal(body, &obj)
+
+	if err != nil {
+		log.Println("Error occuried")
+		c.JSON(404, gin.H{"message": "user not created"})
+	}
+
+	companyObject := company.Company{Name: obj["name"].(string)}
+	result := companyObject.Insert()
+	log.Println(companyObject)
+
+	if result.Error != nil {
+		c.JSON(404, gin.H{"message": "Failed to create"})
+	} else {
+		data := schemas.CompanySerializer(&companyObject)
+		c.JSON(200, data)
+	}
+
 }

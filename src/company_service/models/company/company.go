@@ -22,7 +22,7 @@ type Base struct {
 
 type Company struct {
 	Base     Base            `gorm:"embedded"`
-	Name     string          `gorm:"column:name;size:128;not null;"`
+	Name     string          `gorm:"column:name;size:128;not null;unique;"`
 	Branches []branch.Branch `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
@@ -75,9 +75,10 @@ func (company *Company) SelectAll(companies *[]Company) *gorm.DB {
 
 // Insert function is used to insert data into database
 // SECURITY ISSUES: NOT CHEKCED BEFORE INSERTION
-func (company *Company) Insert() {
+func (company *Company) Insert() *gorm.DB {
 	result := db.Create(company)
 	log.Println("Created -> ", result)
+	return result
 }
 
 // ############################## //
