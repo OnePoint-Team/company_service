@@ -1,7 +1,7 @@
 package branch
 
 import (
-	"company_service/initDB"
+	"github.com/OnePoint-Team/company_service/initDB"
 	"log"
 	"regexp"
 	"time"
@@ -27,7 +27,7 @@ type Branch struct {
 
 // BeforeCreate method run before every create call via the ORM.
 func (branch *Branch) BeforeCreate(db *gorm.DB) (err error) {
-	uuid, err := uuid.NewV4()
+	uuid := uuid.NewV4()
 	if err != nil {
 		return err
 	}

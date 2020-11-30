@@ -1,10 +1,10 @@
 package main
 
 import (
-	"company_service/initDB"
-	"company_service/models/branch"
-	"company_service/models/company"
-	"company_service/routes/companies"
+	"github.com/OnePoint-Team/company_service/initDB"
+	"github.com/OnePoint-Team/company_service/models/branch"
+	"github.com/OnePoint-Team/company_service/models/company"
+	"github.com/OnePoint-Team/company_service/routes/companies"
 	"fmt"
 
 	"github.com/gin-gonic/gin"

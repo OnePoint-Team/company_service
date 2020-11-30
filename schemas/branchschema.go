@@ -1,7 +1,7 @@
 package schemas
 
 import (
-	"company_service/models/branch"
+	"github.com/OnePoint-Team/company_service/models/branch"
 )
 
 // BranchSerializer to serialize Branch object

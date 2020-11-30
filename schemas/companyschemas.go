@@ -1,7 +1,7 @@
 package schemas
 
 import (
-	"company_service/models/company"
+	"github.com/OnePoint-Team/company_service/models/company"
 )
 
 // CompanySerializer to serialize object

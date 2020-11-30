@@ -1,11 +1,12 @@
 package company
 
 import (
-	"company_service/initDB"
-	"company_service/models/branch"
 	"log"
 	"regexp"
 	"time"
+
+	"github.com/OnePoint-Team/company_service/initDB"
+	"github.com/OnePoint-Team/company_service/models/branch"
 
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
@@ -28,10 +29,8 @@ type Company struct {
 
 // BeforeCreate method run before every create call via the ORM.
 func (company *Company) BeforeCreate(db *gorm.DB) (err error) {
-	uuid, err := uuid.NewV4()
-	if err != nil {
-		return err
-	}
+	uuid := uuid.NewV4()
+
 	log.Println("UUID IS GENERATED")
 	company.Base.ID = uuid
 	return

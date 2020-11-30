@@ -1,8 +1,8 @@
 package companies
 
 import (
-	"company_service/models/company"
-	"company_service/schemas"
+	"github.com/OnePoint-Team/company_service/models/company"
+	"github.com/OnePoint-Team/company_service/schemas"
 	"encoding/json"
 	"io/ioutil"
 	"log"
