@@ -3,22 +3,24 @@ package main
 import (
 	"fmt"
 
-	"github.com/OnePoint-Team/company_service/configs"
 	"github.com/OnePoint-Team/company_service/initDB"
+	"github.com/OnePoint-Team/company_service/models/agent"
 	"github.com/OnePoint-Team/company_service/models/branch"
 	"github.com/OnePoint-Team/company_service/models/company"
-	"github.com/OnePoint-Team/company_service/routes/companies"
-
-	"github.com/gin-gonic/gin"
 )
 
 func migrate() {
 	// Migration
 	db := initDB.InitDB()
-	err := db.AutoMigrate(&company.Company{}, &branch.Branch{})
-	fmt.Println("err->", err)
+	err := db.AutoMigrate(&company.Company{}, &branch.Branch{}, &agent.Agent{})
+
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Migration Successfull->")
 
 }
+
 func insert_into_company() {
 	c := company.Company{Name: "_(*(*^*;"}
 	c.Insert()
@@ -45,13 +47,14 @@ func select_test() {
 }
 
 func main() {
+	migrate()
 
-	r := gin.Default()
-	r.GET("/", companies.GetCompanies)
-	r.POST("/", companies.POSTCompanies)
+	// r := gin.Default()
+	// r.GET("/", companies.GetCompanies)
+	// r.POST("/", companies.POSTCompanies)
 
-	r.GET("/:id", companies.GetByID)
+	// r.GET("/:id", companies.GetByID)
 
-	r.Run(configs.Config.Host + ":" + configs.Config.Port)
+	// r.Run(configs.Config.Host + ":" + configs.Config.Port)
 
 }
