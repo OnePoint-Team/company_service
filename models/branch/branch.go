@@ -14,6 +14,7 @@ import (
 
 var db *gorm.DB = initDB.InitDB()
 
+// Base struct for Structs
 type Base struct {
 	ID        uuid.UUID `gorm:"primary_key;type:uuid;"`
 	CreatedAt time.Time
