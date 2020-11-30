@@ -4,10 +4,7 @@ import (
 	"company_service/initDB"
 	"company_service/models/branch"
 	"company_service/models/company"
-	"company_service/routes/companies"
 	"fmt"
-
-	"github.com/gin-gonic/gin"
 )
 
 func migrate() {
@@ -43,13 +40,13 @@ func select_test() {
 }
 
 func main() {
+	fmt.Fprintln("hes")
+	// r := gin.Default()
+	// r.GET("/", companies.GetCompanies)
+	// r.POST("/", companies.POSTCompanies)
 
-	r := gin.Default()
-	r.GET("/", companies.GetCompanies)
-	r.POST("/", companies.POSTCompanies)
+	// r.GET("/:id", companies.GetByID)
 
-	r.GET("/:id", companies.GetByID)
-
-	r.Run()
+	// r.Run()
 
 }
