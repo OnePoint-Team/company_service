@@ -1,8 +1,6 @@
 ##############
 #  Original  #
 ##############
-src/*
-!src/company_service
 # directory structure
 bin/*
 pkg/*
