@@ -3,14 +3,14 @@ package initDB
 import (
 	"fmt"
 
+	"github.com/OnePoint-Team/company_service/configs"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-// initDB function initialiazies db
+// InitDB function initialiazies db
 func InitDB() *gorm.DB {
-	dsn := "host=localhost user=postgres password=postgres dbname=company_service port=5432 timezone=Asia/Baku"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(configs.Config.DSN), &gorm.Config{})
 
 	if err != nil {
 		fmt.Println("err ---> ", err)

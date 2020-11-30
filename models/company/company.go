@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/OnePoint-Team/company_service/initDB"
+	"github.com/OnePoint-Team/company_service/models/agent"
 	"github.com/OnePoint-Team/company_service/models/branch"
 
 	uuid "github.com/satori/go.uuid"
@@ -25,6 +26,7 @@ type Company struct {
 	Base     Base            `gorm:"embedded"`
 	Name     string          `gorm:"column:name;size:128;not null;unique;"`
 	Branches []branch.Branch `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Agents   []agent.Agent   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 // BeforeCreate method run before every create call via the ORM.
