@@ -3,10 +3,13 @@ package main
 import (
 	"fmt"
 
+	"github.com/OnePoint-Team/company_service/configs"
 	"github.com/OnePoint-Team/company_service/initDB"
 	"github.com/OnePoint-Team/company_service/models/agent"
 	"github.com/OnePoint-Team/company_service/models/branch"
 	"github.com/OnePoint-Team/company_service/models/company"
+	"github.com/OnePoint-Team/company_service/routes/companies"
+	"github.com/gin-gonic/gin"
 )
 
 func migrate() {
@@ -47,14 +50,14 @@ func select_test() {
 }
 
 func main() {
-	migrate()
+	// migrate()
 
-	// r := gin.Default()
-	// r.GET("/", companies.GetCompanies)
-	// r.POST("/", companies.POSTCompanies)
+	r := gin.Default()
+	r.GET("/companies", companies.GetCompanies)
+	r.POST("/companies", companies.POSTCompanies)
 
-	// r.GET("/:id", companies.GetByID)
+	r.GET("/companies/:id", companies.GetByID)
 
-	// r.Run(configs.Config.Host + ":" + configs.Config.Port)
+	r.Run(configs.Config.Host + ":" + configs.Config.Port)
 
 }

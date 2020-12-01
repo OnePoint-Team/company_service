@@ -16,11 +16,21 @@ type config struct {
 }
 
 func (c *config) initDefaults() {
-	port, _ := reflect.TypeOf(Config).FieldByName("Port")
-	host, _ := reflect.TypeOf(Config).FieldByName("Host")
+	if port := os.Getenv("PORT"); port != "" {
+		Config.Port = port
+	} else {
+		port, _ := reflect.TypeOf(Config).FieldByName("Port")
 
-	Config.Port = port.Tag.Get("default")
-	Config.Host = host.Tag.Get("default")
+		Config.Port = port.Tag.Get("default")
+	}
+
+	if host := os.Getenv("HOST"); host != "" {
+		Config.Host = host
+	} else {
+		host, _ := reflect.TypeOf(Config).FieldByName("Host")
+		Config.Host = host.Tag.Get("default")
+	}
+
 }
 
 // Config for project
@@ -28,7 +38,7 @@ var Config config
 
 // DevConfig Development configuration
 func DevConfig() {
-	Config.DSN = "host=localhost user=postgres password=postgres dbname=company_service port=5432 timezone=Asia/Baku"
+	Config.DSN = "host=localhost  dbname=company_service port=5432 timezone=Asia/Baku"
 	Config.Debug = true
 }
 
