@@ -1,20 +1,21 @@
-package initDB
+package initdb
 
 import (
-	"fmt"
-
 	"github.com/OnePoint-Team/company_service/configs"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
+// DbInstance connection instance
+var DbInstance *gorm.DB
+
 // InitDB function initialiazies db
-func InitDB() *gorm.DB {
-	db, err := gorm.Open(postgres.Open(configs.Config.DSN), &gorm.Config{})
+func init() {
+	var err error
+	DbInstance, err = gorm.Open(postgres.Open(configs.Config.DSN), &gorm.Config{})
 
 	if err != nil {
-		fmt.Println("err ---> ", err)
+		panic(err)
 	}
 
-	return db
 }

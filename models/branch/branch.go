@@ -5,14 +5,12 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/OnePoint-Team/company_service/initDB"
+	"github.com/OnePoint-Team/company_service/initdb"
 	"github.com/OnePoint-Team/company_service/models/agent"
 
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
-
-var db *gorm.DB = initDB.InitDB()
 
 // Base struct for Structs
 type Base struct {
@@ -43,7 +41,7 @@ func (branch *Branch) BeforeCreate(db *gorm.DB) (err error) {
 // Insert function is used to insert data into database
 // SECURITY ISSUES: NOT CHEKCED BEFORE INSERTION
 func (branch *Branch) Insert() {
-	db.Create(branch)
+	initdb.DbInstance.Create(branch)
 	log.Println("Created -> ", branch)
 }
 
@@ -59,19 +57,19 @@ func (branch *Branch) Select(id string) {
 	}
 
 	// SELECT * FROM users WHERE id = id;
-	db.First(&branch, uid)
+	initdb.DbInstance.First(&branch, uid)
 }
 
 // Update function is used to update data in the database
 // SECURITY ISSUES: NOT CHEKCED BEFORE UPDATE
 func (branch *Branch) Update() {
-	db.Save(&branch)
+	initdb.DbInstance.Save(&branch)
 	log.Println("Updated -> ", branch)
 }
 
 // Delete function is used to delete data into database
 func (branch *Branch) Delete() {
-	db.Delete(&branch)
+	initdb.DbInstance.Delete(&branch)
 	log.Println("Deleted -> ", branch)
 }
 

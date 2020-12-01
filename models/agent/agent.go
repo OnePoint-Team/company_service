@@ -5,13 +5,10 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/OnePoint-Team/company_service/initDB"
-
+	"github.com/OnePoint-Team/company_service/initdb"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
-
-var db *gorm.DB = initDB.InitDB()
 
 type Base struct {
 	ID        uuid.UUID `gorm:"primary_key;type:uuid;"`
@@ -28,7 +25,7 @@ type Agent struct {
 }
 
 // BeforeCreate method run before every create call via the ORM.
-func (a *Agent) BeforeCreate(db *gorm.DB) (err error) {
+func (a *Agent) BeforeCreate(DbInstance *gorm.DB) (err error) {
 	uuid := uuid.NewV4()
 	if err != nil {
 		return err
@@ -41,7 +38,7 @@ func (a *Agent) BeforeCreate(db *gorm.DB) (err error) {
 // Insert function is used to insert data into database
 // SECURITY ISSUES: NOT CHEKCED BEFORE INSERTION
 func (a *Agent) Insert() {
-	db.Create(a)
+	initdb.DbInstance.Create(a)
 	log.Println("Created -> ", a)
 }
 
@@ -57,19 +54,19 @@ func (a *Agent) Select(id string) {
 	}
 
 	// SELECT * FROM users WHERE id = id;
-	db.First(&a, uid)
+	initdb.DbInstance.First(&a, uid)
 }
 
 // Update function is used to update data in the database
 // SECURITY ISSUES: NOT CHEKCED BEFORE UPDATE
 func (a *Agent) Update() {
-	db.Save(&a)
+	initdb.DbInstance.Save(&a)
 	log.Println("Updated -> ", a)
 }
 
 // Delete function is used to delete data into database
 func (a *Agent) Delete() {
-	db.Delete(&a)
+	initdb.DbInstance.Delete(&a)
 	log.Println("Deleted -> ", a)
 }
 

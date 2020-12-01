@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/OnePoint-Team/company_service/initDB"
+	"github.com/OnePoint-Team/company_service/initdb"
 	"github.com/OnePoint-Team/company_service/models/agent"
 	"github.com/OnePoint-Team/company_service/models/branch"
 
@@ -13,8 +13,6 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
-
-var db *gorm.DB = initDB.InitDB()
 
 type Base struct {
 	ID        uuid.UUID `gorm:"primary_key;type:uuid;"`
@@ -50,9 +48,9 @@ func (company *Company) Select(id string) *gorm.DB {
 	}
 
 	// SELECT * FROM users WHERE id = id;
-	result := db.First(&company, uid)
+	result := initdb.DbInstance.First(&company, uid)
 	if result.Error == nil {
-		db.Preload(clause.Associations).Find(company)
+		initdb.DbInstance.Preload(clause.Associations).Find(company)
 	}
 
 	return result
@@ -61,13 +59,13 @@ func (company *Company) Select(id string) *gorm.DB {
 // SelectAll all ############################## //
 func (company *Company) SelectAll(companies *[]Company) *gorm.DB {
 	// SELECT * FROM users WHERE id = id;
-	result := db.Find(&companies)
+	result := initdb.DbInstance.Find(&companies)
 
 	if result.Error != nil {
 		log.Println("Data not found->", result.Error)
 	} else {
 		// Preload Branches of Company.
-		db.Preload(clause.Associations).Find(&companies)
+		initdb.DbInstance.Preload(clause.Associations).Find(&companies)
 	}
 
 	return result
@@ -77,7 +75,7 @@ func (company *Company) SelectAll(companies *[]Company) *gorm.DB {
 // Insert function is used to insert data into database
 // SECURITY ISSUES: NOT CHEKCED BEFORE INSERTION
 func (company *Company) Insert() *gorm.DB {
-	result := db.Create(company)
+	result := initdb.DbInstance.Create(company)
 	log.Println("Created -> ", result)
 	return result
 }
@@ -87,13 +85,13 @@ func (company *Company) Insert() *gorm.DB {
 // Update function is used to update data in the database
 // SECURITY ISSUES: NOT CHEKCED BEFORE UPDATE
 func (company *Company) Update() {
-	db.Save(&company)
+	initdb.DbInstance.Save(&company)
 	log.Println("Updated -> ", company)
 }
 
 // Delete function is used to delete data into database
 func (company *Company) Delete() {
-	db.Delete(&company)
+	initdb.DbInstance.Delete(&company)
 	log.Println("Deleted -> ", company)
 }
 
