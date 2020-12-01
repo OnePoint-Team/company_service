@@ -3,25 +3,18 @@ package branch
 import (
 	"log"
 	"regexp"
-	"time"
 
 	"github.com/OnePoint-Team/company_service/initdb"
+	base "github.com/OnePoint-Team/company_service/models"
 	"github.com/OnePoint-Team/company_service/models/agent"
 
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
 
-// Base struct for Structs
-type Base struct {
-	ID        uuid.UUID `gorm:"primary_key;type:uuid;"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
-
 // Branch struct
 type Branch struct {
-	Base      Base          `gorm:"embedded"`
+	Base      base.Base     `gorm:"embedded"`
 	Name      string        `gorm:"column:name;size:128;not null;"`
 	CompanyID uuid.UUID     `json:"-"`
 	Agents    []agent.Agent `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
@@ -36,6 +29,16 @@ func (branch *Branch) BeforeCreate(db *gorm.DB) (err error) {
 	log.Println("UUID IS GENERATED")
 	branch.Base.ID = uuid
 	return
+}
+
+//Tabler for gorm get table name
+type Tabler interface {
+	TableName() string
+}
+
+// TableName for change table name
+func (Branch) TableName() string {
+	return "branch"
 }
 
 // Insert function is used to insert data into database

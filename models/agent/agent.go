@@ -3,25 +3,29 @@ package agent
 import (
 	"log"
 	"regexp"
-	"time"
 
 	"github.com/OnePoint-Team/company_service/initdb"
+	base "github.com/OnePoint-Team/company_service/models"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 )
 
-type Base struct {
-	ID        uuid.UUID `gorm:"primary_key;type:uuid;"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
-
 // Agent struct
 type Agent struct {
-	Base      Base      `gorm:"embedded"`
+	Base      base.Base `gorm:"embedded"`
 	CompanyID uuid.UUID `json:"-"`
 	BranchID  uuid.UUID `json:"-"`
 	UserID    uuid.UUID `json:"-"`
+}
+
+//Tabler for gorm get table name
+type Tabler interface {
+	TableName() string
+}
+
+// TableName for change table name
+func (Agent) TableName() string {
+	return "agents"
 }
 
 // BeforeCreate method run before every create call via the ORM.

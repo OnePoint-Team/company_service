@@ -3,9 +3,9 @@ package company
 import (
 	"log"
 	"regexp"
-	"time"
 
 	"github.com/OnePoint-Team/company_service/initdb"
+	base "github.com/OnePoint-Team/company_service/models"
 	"github.com/OnePoint-Team/company_service/models/agent"
 	"github.com/OnePoint-Team/company_service/models/branch"
 
@@ -14,17 +14,22 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-type Base struct {
-	ID        uuid.UUID `gorm:"primary_key;type:uuid;"`
-	CreatedAt time.Time `json:"created"`
-	UpdatedAt time.Time `json:"updated"`
-}
-
+//Company struct
 type Company struct {
-	Base     Base            `gorm:"embedded"`
+	Base     base.Base       `gorm:"embedded"`
 	Name     string          `gorm:"column:name;size:128;not null;unique;"`
 	Branches []branch.Branch `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Agents   []agent.Agent   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+
+//Tabler for gorm get table name
+type Tabler interface {
+	TableName() string
+}
+
+// TableName for change table name
+func (Company) TableName() string {
+	return "company"
 }
 
 // BeforeCreate method run before every create call via the ORM.
