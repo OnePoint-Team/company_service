@@ -9,6 +9,6 @@ import (
 // Base struct for Structs
 type Base struct {
 	ID        uuid.UUID `gorm:"primary_key;type:uuid;"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time `gorm:"column:created"`
+	UpdatedAt time.Time `gorm:"column:updated"`
 }

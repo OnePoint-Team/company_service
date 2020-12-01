@@ -4,6 +4,16 @@ import (
 	"github.com/OnePoint-Team/company_service/models/company"
 )
 
+// CompanyCreate for input data
+type CompanyCreate struct {
+	Name string `json:"name" binding:"required"`
+}
+
+//CompanyPathVar for path variable
+type CompanyPathVar struct {
+	ID string `uri:"id" binding:"required" validate:"required,uuid4"`
+}
+
 // CompanySerializer to serialize object
 func CompanySerializer(c *company.Company) map[string]interface{} {
 	data := make(map[string]interface{})

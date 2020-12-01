@@ -1,11 +1,13 @@
 package companies
 
 import (
+	"log"
+
 	"github.com/OnePoint-Team/company_service/models/company"
 	"github.com/OnePoint-Team/company_service/schemas"
-	"encoding/json"
-	"io/ioutil"
-	"log"
+
+	// uuid "github.com/satori/go.uuid"
+	"gopkg.in/go-playground/validator.v9"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,8 +15,19 @@ import (
 // GetByID fetches company by id from database
 func GetByID(c *gin.Context) {
 	companyObject := company.Company{}
-	id := c.Param("id")
-	result := companyObject.Select(id)
+	var pathvar schemas.CompanyPathVar
+
+	// id := c.Param("id")
+	if err := c.BindUri(&pathvar); err != nil {
+		log.Println(err)
+		return
+	}
+	validate := validator.New()
+	if err := validate.Struct(pathvar); err != nil {
+		c.SecureJSON(400, gin.H{"message": "not found"})
+		return
+	}
+	result := companyObject.Select(pathvar.ID)
 
 	if result.Error == nil {
 		data := schemas.CompanySerializer(&companyObject)
@@ -45,24 +58,26 @@ func GetCompanies(c *gin.Context) {
 
 // POSTCompanies gets
 func POSTCompanies(c *gin.Context) {
-	body, _ := ioutil.ReadAll(c.Request.Body)
+	// body, _ := ioutil.ReadAll(c.Request.Body)
+	var input schemas.CompanyCreate
+	// var obj map[string]interface{}
+	// err := json.Unmarshal(body, &obj)
 
-	var obj map[string]interface{}
-	err := json.Unmarshal(body, &obj)
-
-	if err != nil {
+	if err := c.ShouldBindJSON(&input); err != nil {
 		log.Println("Error occuried")
-		c.JSON(404, gin.H{"message": "user not created"})
+		c.JSON(422, gin.H{"message": "user not created"})
+		return
 	}
 
-	companyObject := company.Company{Name: obj["name"].(string)}
-	result := companyObject.Insert()
-	log.Println(companyObject)
+	//companyObject := company.Company{Name: obj["name"].(string)}
+	company := company.Company{Name: input.Name}
+	err := company.Insert()
+	log.Println(company)
 
-	if result.Error != nil {
+	if err.Error != nil {
 		c.JSON(404, gin.H{"message": "Failed to create"})
 	} else {
-		data := schemas.CompanySerializer(&companyObject)
+		data := schemas.CompanySerializer(&company)
 		c.JSON(200, data)
 	}
 
