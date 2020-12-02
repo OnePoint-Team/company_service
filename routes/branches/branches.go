@@ -25,7 +25,7 @@ func CreateBranch(c *gin.Context) {
 	}
 	validate := validator.New()
 	if err := validate.Struct(pathvar); err != nil {
-		c.SecureJSON(400, gin.H{"message": "not found"})
+		c.JSON(400, gin.H{"message": "not found"})
 		return
 	}
 
@@ -73,11 +73,37 @@ func GetBranchByID(c *gin.Context) {
 	}
 	validate := validator.New()
 	if err := validate.Struct(pathVar); err != nil {
-		c.SecureJSON(400, gin.H{"message": "Fail"})
+		c.JSON(400, gin.H{"message": "Fail"})
+		return
+	}
+	log.Println("Branch id ->", pathVar.BID)
+	log.Println("Company id ->", pathVar.CID)
+
+	if err := b.Select(pathVar.BID, pathVar.CID); err != nil {
+		c.JSON(404, gin.H{"message": "Not Found"})
+		return
+	}
+	data := schemas.BranchSerializer(&b)
+	c.JSON(200, data)
+}
+
+// DeleteBranch remove branhc from db
+func DeleteBranch(c *gin.Context) {
+	var b branch.Branch
+	var pathVar schemas.BranchPathVar
+
+	if err := c.BindUri(&pathVar); err != nil {
+		c.JSON(400, gin.H{"message": "validation error"})
+		log.Println(err.Error())
+		return
+	}
+	validate := validator.New()
+	if err := validate.Struct(pathVar); err != nil {
+		c.JSON(400, gin.H{"message": "Fail"})
 		return
 	}
 
-	b.Select(pathVar.BID, pathVar.CID)
-	data := schemas.BranchSerializer(&b)
-	c.JSON(200, data)
+	// b.Select(pathVar.BID, pathVar.CID)
+	b.Delete(pathVar.BID, pathVar.CID)
+	c.JSON(200, gin.H{"message": "success"})
 }

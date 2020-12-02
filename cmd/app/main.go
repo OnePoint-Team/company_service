@@ -18,6 +18,7 @@ func main() {
 	r.POST("/companies/:cid/branches", branches.CreateBranch)
 	r.GET("/companies/:cid/branches", branches.GetBranches)
 	r.GET("/companies/:cid/branches/:bid", branches.GetBranchByID)
+	r.DELETE("/companies/:cid/branches/:bid", branches.DeleteBranch)
 
 	r.Run(configs.Config.Host + ":" + configs.Config.Port)
 

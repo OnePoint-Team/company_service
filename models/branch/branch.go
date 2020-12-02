@@ -64,7 +64,7 @@ func (branch *Branch) Insert(id string) error {
 }
 
 // Select by id ############################## //
-func (branch *Branch) Select(bid, cid string) {
+func (branch *Branch) Select(bid, cid string) error {
 
 	// Chekc if all is digit or letter
 	sanitarize(bid)
@@ -72,16 +72,20 @@ func (branch *Branch) Select(bid, cid string) {
 	branchID, err := uuid.FromString(bid)
 	if err != nil {
 		log.Fatalln("Error occuried ->", err)
-		return
+		return err
 	}
 	companyID, err := uuid.FromString(cid)
 	if err != nil {
 		log.Fatalln("Error occuried ->", err)
-		return
+		return err
 	}
 
-	// SELECT * FROM users WHERE id = id;
-	initdb.DbInstance.First(&branch).Where("id = ?", branchID, "company_id = ?", companyID)
+	r := initdb.DbInstance.Table("branch").Where("id = ? AND company_id = ?", branchID, companyID).First(&branch)
+	if errors.Is(r.Error, gorm.ErrRecordNotFound) {
+		log.Println(r.Error)
+		return r.Error
+	}
+	return nil
 }
 
 // All fetch all branch with foreignkey
@@ -91,7 +95,7 @@ func (branch *Branch) All(branches *[]Branch, id string) {
 		log.Fatalln("Error occuried ->", err)
 		return
 	}
-	r := initdb.DbInstance.Find(&branches).Where(&Branch{CompanyID: uid})
+	r := initdb.DbInstance.Where(&Branch{CompanyID: uid}).Find(&branches)
 	if r.Error != nil {
 		log.Println(r.Error)
 	}
@@ -113,8 +117,9 @@ func (branch *Branch) Update() {
 }
 
 // Delete function is used to delete data into database
-func (branch *Branch) Delete() {
-	initdb.DbInstance.Delete(&branch)
+func (branch *Branch) Delete(bid, cid string) {
+	initdb.DbInstance.Table("branch").Where("id = ? AND company_id = ?", bid, cid).Delete(branch)
+	// initdb.DbInstance.Delete(&branch)
 	log.Println("Deleted -> ", branch)
 }
 
