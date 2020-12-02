@@ -52,7 +52,7 @@ func (branch *Branch) Insert(id string) error {
 		return err
 	}
 	log.Println("before select -> ", branch)
-	if err := checkExistBranch(branch.Name); err != nil {
+	if err := checkExistBranch(branch.Name, uid); err != nil {
 		log.Println("Selected -> ", branch)
 		branch.CompanyID = uid
 		initdb.DbInstance.Create(branch)
@@ -79,9 +79,9 @@ func (branch *Branch) Select(id string) {
 	initdb.DbInstance.First(&branch, uid)
 }
 
-func checkExistBranch(name string) error {
+func checkExistBranch(name string, id uuid.UUID) error {
 	b := Branch{}
-	r := initdb.DbInstance.Table("branch").Where("name = ?", name).First(&b)
+	r := initdb.DbInstance.Table("branch").Where(&Branch{Name: name, CompanyID: id}).First(&b)
 	log.Println("Exist data ->> ", b)
 	return r.Error
 }
