@@ -14,8 +14,10 @@ func main() {
 	r.GET("/companies", companies.GetCompanies)
 	r.POST("/companies", companies.CreateCompanies)
 
-	r.GET("/companies/:id", companies.GetByID)
-	r.POST("/companies/:id/branches", branches.CreateBranch)
+	r.GET("/companies/:cid", companies.GetByID)
+	r.POST("/companies/:cid/branches", branches.CreateBranch)
+	r.GET("/companies/:cid/branches", branches.GetBranches)
+	r.GET("/companies/:cid/branches/:bid", branches.GetBranchByID)
 
 	r.Run(configs.Config.Host + ":" + configs.Config.Port)
 

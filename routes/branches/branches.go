@@ -40,3 +40,44 @@ func CreateBranch(c *gin.Context) {
 	log.Println(b)
 
 }
+
+// GetBranches fetch all branches
+func GetBranches(c *gin.Context) {
+	var b branch.Branch
+	listOfBranch := []branch.Branch{}
+	var pathvar schemas.CompanyPathVar
+
+	if err := c.BindUri(&pathvar); err != nil {
+		log.Println(err)
+		return
+	}
+	validate := validator.New()
+	if err := validate.Struct(pathvar); err != nil {
+		c.JSON(400, gin.H{"message": "not found"})
+		return
+	}
+	b.All(&listOfBranch, pathvar.ID)
+
+	data := schemas.SerializeAllBranches(&listOfBranch)
+	c.JSON(200, data)
+}
+
+// GetBranchByID fetch branch by id
+func GetBranchByID(c *gin.Context) {
+	var b branch.Branch
+	var pathVar schemas.BranchPathVar
+
+	if err := c.BindUri(&pathVar); err != nil {
+		log.Println(err.Error())
+		return
+	}
+	validate := validator.New()
+	if err := validate.Struct(pathVar); err != nil {
+		c.SecureJSON(400, gin.H{"message": "Fail"})
+		return
+	}
+
+	b.Select(pathVar.BID, pathVar.CID)
+	data := schemas.BranchSerializer(&b)
+	c.JSON(200, data)
+}

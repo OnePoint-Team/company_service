@@ -62,8 +62,8 @@ func (company *Company) Select(id string) error {
 	return result.Error
 }
 
-// SelectAll all ############################## //
-func (company *Company) SelectAll(companies *[]Company) error {
+// All all ############################## //
+func (company *Company) All(companies *[]Company) error {
 	// SELECT * FROM users WHERE id = id;
 	result := initdb.DbInstance.Find(&companies)
 

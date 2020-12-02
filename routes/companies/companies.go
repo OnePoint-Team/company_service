@@ -5,11 +5,8 @@ import (
 
 	"github.com/OnePoint-Team/company_service/models/company"
 	"github.com/OnePoint-Team/company_service/schemas"
-
-	// uuid "github.com/satori/go.uuid"
-	"gopkg.in/go-playground/validator.v9"
-
 	"github.com/gin-gonic/gin"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 // GetByID fetches company by id from database
@@ -42,7 +39,7 @@ func GetCompanies(c *gin.Context) {
 	companyObject := company.Company{}
 	var companies []company.Company
 
-	err := companyObject.SelectAll(&companies)
+	err := companyObject.All(&companies)
 
 	if err == nil {
 		data := schemas.CompaniesSerializer(&companies)

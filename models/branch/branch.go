@@ -64,19 +64,38 @@ func (branch *Branch) Insert(id string) error {
 }
 
 // Select by id ############################## //
-func (branch *Branch) Select(id string) {
+func (branch *Branch) Select(bid, cid string) {
 
 	// Chekc if all is digit or letter
-	sanitarize(id)
+	sanitarize(bid)
 
-	uid, err := uuid.FromString(id)
+	branchID, err := uuid.FromString(bid)
+	if err != nil {
+		log.Fatalln("Error occuried ->", err)
+		return
+	}
+	companyID, err := uuid.FromString(cid)
 	if err != nil {
 		log.Fatalln("Error occuried ->", err)
 		return
 	}
 
 	// SELECT * FROM users WHERE id = id;
-	initdb.DbInstance.First(&branch, uid)
+	initdb.DbInstance.First(&branch).Where("id = ?", branchID, "company_id = ?", companyID)
+}
+
+// All fetch all branch with foreignkey
+func (branch *Branch) All(branches *[]Branch, id string) {
+	uid, err := uuid.FromString(id)
+	if err != nil {
+		log.Fatalln("Error occuried ->", err)
+		return
+	}
+	r := initdb.DbInstance.Find(&branches).Where(&Branch{CompanyID: uid})
+	if r.Error != nil {
+		log.Println(r.Error)
+	}
+
 }
 
 func checkExistBranch(name string, id uuid.UUID) error {

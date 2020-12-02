@@ -11,7 +11,7 @@ type CompanyCreate struct {
 
 //CompanyPathVar for path variable
 type CompanyPathVar struct {
-	ID string `uri:"id" binding:"required" validate:"required,uuid4"`
+	ID string `uri:"cid" binding:"required" validate:"required,uuid4"`
 }
 
 // CompanySerializer to serialize object
