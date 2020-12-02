@@ -1,6 +1,7 @@
 package branch
 
 import (
+	"errors"
 	"log"
 	"regexp"
 
@@ -43,9 +44,23 @@ func (Branch) TableName() string {
 
 // Insert function is used to insert data into database
 // SECURITY ISSUES: NOT CHEKCED BEFORE INSERTION
-func (branch *Branch) Insert() {
-	initdb.DbInstance.Create(branch)
-	log.Println("Created -> ", branch)
+func (branch *Branch) Insert(id string) error {
+
+	uid, err := uuid.FromString(id)
+	if err != nil {
+		log.Fatalln("Error occuried ->", err)
+		return err
+	}
+	log.Println("before select -> ", branch)
+	if err := checkExistBranch(branch.Name); err != nil {
+		log.Println("Selected -> ", branch)
+		branch.CompanyID = uid
+		initdb.DbInstance.Create(branch)
+		log.Println("Err -> ", err)
+		return nil
+	}
+	return errors.New("Branch already exist")
+
 }
 
 // Select by id ############################## //
@@ -57,10 +72,18 @@ func (branch *Branch) Select(id string) {
 	uid, err := uuid.FromString(id)
 	if err != nil {
 		log.Fatalln("Error occuried ->", err)
+		return
 	}
 
 	// SELECT * FROM users WHERE id = id;
 	initdb.DbInstance.First(&branch, uid)
+}
+
+func checkExistBranch(name string) error {
+	b := Branch{}
+	r := initdb.DbInstance.Table("branch").Where("name = ?", name).First(&b)
+	log.Println("Exist data ->> ", b)
+	return r.Error
 }
 
 // Update function is used to update data in the database

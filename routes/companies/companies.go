@@ -27,13 +27,13 @@ func GetByID(c *gin.Context) {
 		c.SecureJSON(400, gin.H{"message": "not found"})
 		return
 	}
-	result := companyObject.Select(pathvar.ID)
+	err := companyObject.Select(pathvar.ID)
 
-	if result.Error == nil {
+	if err == nil {
 		data := schemas.CompanySerializer(&companyObject)
-		c.SecureJSON(200, data)
+		c.JSON(200, data)
 	} else {
-		c.SecureJSON(404, gin.H{"message": "not found"})
+		c.JSON(404, gin.H{"message": "not found"})
 	}
 }
 
@@ -42,13 +42,9 @@ func GetCompanies(c *gin.Context) {
 	companyObject := company.Company{}
 	var companies []company.Company
 
-	result := companyObject.SelectAll(&companies)
+	err := companyObject.SelectAll(&companies)
 
-	if result.Error == nil {
-		schemas.CompaniesSerializer(&companies)
-	}
-
-	if result.Error == nil {
+	if err == nil {
 		data := schemas.CompaniesSerializer(&companies)
 		c.JSON(200, data)
 	} else {
@@ -56,15 +52,15 @@ func GetCompanies(c *gin.Context) {
 	}
 }
 
-// POSTCompanies gets
-func POSTCompanies(c *gin.Context) {
+// CreateCompanies gets
+func CreateCompanies(c *gin.Context) {
 	// body, _ := ioutil.ReadAll(c.Request.Body)
 	var input schemas.CompanyCreate
 	// var obj map[string]interface{}
 	// err := json.Unmarshal(body, &obj)
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		log.Println("Error occuried")
+		log.Println(err)
 		c.JSON(422, gin.H{"message": "user not created"})
 		return
 	}
@@ -74,7 +70,7 @@ func POSTCompanies(c *gin.Context) {
 	err := company.Insert()
 	log.Println(company)
 
-	if err.Error != nil {
+	if err != nil {
 		c.JSON(404, gin.H{"message": "Failed to create"})
 	} else {
 		data := schemas.CompanySerializer(&company)

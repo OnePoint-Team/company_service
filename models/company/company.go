@@ -42,7 +42,7 @@ func (company *Company) BeforeCreate(db *gorm.DB) (err error) {
 }
 
 // Select by id ############################## //
-func (company *Company) Select(id string) *gorm.DB {
+func (company *Company) Select(id string) error {
 
 	// Chekc if all is digit or letter
 	sanitarize(id)
@@ -50,6 +50,7 @@ func (company *Company) Select(id string) *gorm.DB {
 	uid, err := uuid.FromString(id)
 	if err != nil {
 		log.Println("uuid.FromString Error ->", err)
+		return err
 	}
 
 	// SELECT * FROM users WHERE id = id;
@@ -58,31 +59,31 @@ func (company *Company) Select(id string) *gorm.DB {
 		initdb.DbInstance.Preload(clause.Associations).Find(company)
 	}
 
-	return result
+	return result.Error
 }
 
 // SelectAll all ############################## //
-func (company *Company) SelectAll(companies *[]Company) *gorm.DB {
+func (company *Company) SelectAll(companies *[]Company) error {
 	// SELECT * FROM users WHERE id = id;
 	result := initdb.DbInstance.Find(&companies)
 
 	if result.Error != nil {
 		log.Println("Data not found->", result.Error)
-	} else {
-		// Preload Branches of Company.
-		initdb.DbInstance.Preload(clause.Associations).Find(&companies)
+		return result.Error
 	}
+	// Preload Branches of Company.
+	initdb.DbInstance.Preload(clause.Associations).Find(&companies)
 
-	return result
+	return result.Error
 
 }
 
 // Insert function is used to insert data into database
 // SECURITY ISSUES: NOT CHEKCED BEFORE INSERTION
-func (company *Company) Insert() *gorm.DB {
+func (company *Company) Insert() error {
 	result := initdb.DbInstance.Create(company)
 	log.Println("Created -> ", result)
-	return result
+	return result.Error
 }
 
 // ############################## //
