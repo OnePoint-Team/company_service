@@ -2,6 +2,7 @@ package companies
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/OnePoint-Team/company_service/models/company"
 	"github.com/OnePoint-Team/company_service/schemas"
@@ -21,16 +22,16 @@ func GetByID(c *gin.Context) {
 	}
 	validate := validator.New()
 	if err := validate.Struct(pathvar); err != nil {
-		c.SecureJSON(400, gin.H{"message": "not found"})
+		c.SecureJSON(http.StatusBadRequest, gin.H{"message": "not found"})
 		return
 	}
 	err := companyObject.Select(pathvar.ID)
 
 	if err == nil {
 		data := schemas.CompanySerializer(&companyObject)
-		c.JSON(200, data)
+		c.JSON(http.StatusOK, data)
 	} else {
-		c.JSON(404, gin.H{"message": "not found"})
+		c.JSON(http.StatusNotFound, gin.H{"message": "not found"})
 	}
 }
 
@@ -43,9 +44,9 @@ func GetCompanies(c *gin.Context) {
 
 	if err == nil {
 		data := schemas.CompaniesSerializer(&companies)
-		c.JSON(200, data)
+		c.JSON(http.StatusOK, data)
 	} else {
-		c.JSON(404, gin.H{"message": "not found"})
+		c.JSON(http.StatusNotFound, gin.H{"message": "not found"})
 	}
 }
 
@@ -58,7 +59,6 @@ func CreateCompanies(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		log.Println(err)
-		c.JSON(422, gin.H{"message": "user not created"})
 		return
 	}
 
@@ -68,10 +68,10 @@ func CreateCompanies(c *gin.Context) {
 	log.Println(company)
 
 	if err != nil {
-		c.JSON(404, gin.H{"message": "Failed to create"})
+		c.JSON(http.StatusNotFound, gin.H{"message": "Failed to create"})
 	} else {
 		data := schemas.CompanySerializer(&company)
-		c.JSON(200, data)
+		c.JSON(http.StatusOK, data)
 	}
 
 }

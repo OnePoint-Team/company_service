@@ -2,6 +2,7 @@ package branches
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/OnePoint-Team/company_service/models/branch"
 	"github.com/OnePoint-Team/company_service/schemas"
@@ -26,11 +27,11 @@ func CreateBranch(c *gin.Context) {
 	b := branch.Branch{Name: input.Name}
 	if err := b.Insert(pathvar.ID); err != nil {
 		log.Println("Insert error : ->", err)
-		c.JSON(404, gin.H{"message": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
 		return
 	}
 	data := schemas.BranchSerializer(&b)
-	c.JSON(200, data)
+	c.JSON(http.StatusOK, data)
 	log.Println(b)
 
 }
@@ -49,7 +50,7 @@ func GetBranches(c *gin.Context) {
 	b.All(&listOfBranch, pathvar.ID)
 
 	data := schemas.SerializeAllBranches(&listOfBranch)
-	c.JSON(200, data)
+	c.JSON(http.StatusOK, data)
 }
 
 // GetBranchByID fetch branch by id
@@ -66,11 +67,11 @@ func GetBranchByID(c *gin.Context) {
 	log.Println("Company id ->", pathVar.CID)
 
 	if err := b.Select(pathVar.BID, pathVar.CID); err != nil {
-		c.JSON(404, gin.H{"message": "Not Found"})
+		c.JSON(http.StatusNotFound, gin.H{"message": "Not Found"})
 		return
 	}
 	data := schemas.BranchSerializer(&b)
-	c.JSON(200, data)
+	c.JSON(http.StatusOK, data)
 }
 
 // DeleteBranch remove branhc from db
@@ -79,11 +80,11 @@ func DeleteBranch(c *gin.Context) {
 	var pathVar schemas.BranchPathVar
 
 	if err := c.BindUri(&pathVar); err != nil {
-		c.JSON(400, gin.H{"message": "validation error"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "validation error"})
 		log.Println(err.Error())
 		return
 	}
 	// b.Select(pathVar.BID, pathVar.CID)
 	b.Delete(pathVar.BID, pathVar.CID)
-	c.JSON(200, gin.H{"message": "success"})
+	c.JSON(http.StatusOK, gin.H{"message": "success"})
 }
