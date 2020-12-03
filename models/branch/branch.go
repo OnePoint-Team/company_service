@@ -17,7 +17,7 @@ import (
 type Branch struct {
 	Base      base.Base     `gorm:"embedded"`
 	Name      string        `gorm:"column:name;size:128;not null;"`
-	CompanyID uuid.UUID     `json:"-"`
+	CompanyID uuid.UUID     `json:"company_id"`
 	Agents    []agent.Agent `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
