@@ -22,13 +22,13 @@ type Branch struct {
 }
 
 // BeforeCreate method run before every create call via the ORM.
-func (branch *Branch) BeforeCreate(db *gorm.DB) (err error) {
+func (b *Branch) BeforeCreate(db *gorm.DB) (err error) {
 	uuid := uuid.NewV4()
 	if err != nil {
 		return err
 	}
 	log.Println("UUID IS GENERATED")
-	branch.Base.ID = uuid
+	b.Base.ID = uuid
 	return
 }
 
@@ -44,18 +44,18 @@ func (Branch) TableName() string {
 
 // Insert function is used to insert data into database
 // SECURITY ISSUES: NOT CHEKCED BEFORE INSERTION
-func (branch *Branch) Insert(id string) error {
+func (b *Branch) Insert(id string) error {
 
 	uid, err := uuid.FromString(id)
 	if err != nil {
 		log.Fatalln("Error occuried ->", err)
 		return err
 	}
-	log.Println("before select -> ", branch)
-	if err := checkExistBranch(branch.Name, uid); err != nil {
-		log.Println("Selected -> ", branch)
-		branch.CompanyID = uid
-		initdb.DbInstance.Create(branch)
+	log.Println("before select -> ", b)
+	if err := checkExistBranch(b.Name, uid); err != nil {
+		log.Println("Selected -> ", b)
+		b.CompanyID = uid
+		initdb.DbInstance.Create(b)
 		log.Println("Err -> ", err)
 		return nil
 	}
@@ -64,7 +64,7 @@ func (branch *Branch) Insert(id string) error {
 }
 
 // Select by id ############################## //
-func (branch *Branch) Select(bid, cid string) error {
+func (b *Branch) Select(bid, cid string) error {
 
 	// Chekc if all is digit or letter
 	sanitarize(bid)
@@ -80,7 +80,7 @@ func (branch *Branch) Select(bid, cid string) error {
 		return err
 	}
 
-	r := initdb.DbInstance.Table("branch").Where("id = ? AND company_id = ?", branchID, companyID).First(&branch)
+	r := initdb.DbInstance.Table("branch").Where("id = ? AND company_id = ?", branchID, companyID).First(&b)
 	if errors.Is(r.Error, gorm.ErrRecordNotFound) {
 		log.Println(r.Error)
 		return r.Error
@@ -89,7 +89,7 @@ func (branch *Branch) Select(bid, cid string) error {
 }
 
 // All fetch all branch with foreignkey
-func (branch *Branch) All(branches *[]Branch, id string) {
+func (b *Branch) All(branches *[]Branch, id string) {
 	uid, err := uuid.FromString(id)
 	if err != nil {
 		log.Fatalln("Error occuried ->", err)
@@ -111,16 +111,16 @@ func checkExistBranch(name string, id uuid.UUID) error {
 
 // Update function is used to update data in the database
 // SECURITY ISSUES: NOT CHEKCED BEFORE UPDATE
-func (branch *Branch) Update() {
-	initdb.DbInstance.Save(&branch)
-	log.Println("Updated -> ", branch)
+func (b *Branch) Update() {
+	initdb.DbInstance.Save(&b)
+	log.Println("Updated -> ", b)
 }
 
 // Delete function is used to delete data into database
-func (branch *Branch) Delete(bid, cid string) {
-	initdb.DbInstance.Table("branch").Where("id = ? AND company_id = ?", bid, cid).Delete(branch)
+func (b *Branch) Delete(bid, cid string) {
+	initdb.DbInstance.Table("branch").Where("id = ? AND company_id = ?", bid, cid).Delete(b)
 	// initdb.DbInstance.Delete(&branch)
-	log.Println("Deleted -> ", branch)
+	log.Println("Deleted -> ", b)
 }
 
 // ############################## //

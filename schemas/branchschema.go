@@ -11,8 +11,8 @@ type BranchCreate struct {
 
 // BranchPathVar for path variable
 type BranchPathVar struct {
-	BID string `uri:"bid" binding:"required" validate:"required,uuid4"`
-	CID string `uri:"cid" binding:"required" validate:"required,uuid4"`
+	BID string `uri:"bid" binding:"required,uuid4"`
+	CID string `uri:"cid" binding:"required,uuid4"`
 }
 
 // BranchSerializer to serialize Branch object

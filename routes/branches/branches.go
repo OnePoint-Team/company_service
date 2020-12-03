@@ -6,7 +6,6 @@ import (
 	"github.com/OnePoint-Team/company_service/models/branch"
 	"github.com/OnePoint-Team/company_service/schemas"
 	"github.com/gin-gonic/gin"
-	"gopkg.in/go-playground/validator.v9"
 )
 
 // CreateBranch for creation branches
@@ -21,11 +20,6 @@ func CreateBranch(c *gin.Context) {
 
 	if err := c.BindUri(&pathvar); err != nil {
 		log.Println(err)
-		return
-	}
-	validate := validator.New()
-	if err := validate.Struct(pathvar); err != nil {
-		c.JSON(400, gin.H{"message": "not found"})
 		return
 	}
 
@@ -51,11 +45,7 @@ func GetBranches(c *gin.Context) {
 		log.Println(err)
 		return
 	}
-	validate := validator.New()
-	if err := validate.Struct(pathvar); err != nil {
-		c.JSON(400, gin.H{"message": "not found"})
-		return
-	}
+
 	b.All(&listOfBranch, pathvar.ID)
 
 	data := schemas.SerializeAllBranches(&listOfBranch)
@@ -71,11 +61,7 @@ func GetBranchByID(c *gin.Context) {
 		log.Println(err.Error())
 		return
 	}
-	validate := validator.New()
-	if err := validate.Struct(pathVar); err != nil {
-		c.JSON(400, gin.H{"message": "Fail"})
-		return
-	}
+
 	log.Println("Branch id ->", pathVar.BID)
 	log.Println("Company id ->", pathVar.CID)
 
@@ -97,12 +83,6 @@ func DeleteBranch(c *gin.Context) {
 		log.Println(err.Error())
 		return
 	}
-	validate := validator.New()
-	if err := validate.Struct(pathVar); err != nil {
-		c.JSON(400, gin.H{"message": "Fail"})
-		return
-	}
-
 	// b.Select(pathVar.BID, pathVar.CID)
 	b.Delete(pathVar.BID, pathVar.CID)
 	c.JSON(200, gin.H{"message": "success"})
