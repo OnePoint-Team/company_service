@@ -16,33 +16,33 @@ import (
 
 //Company struct
 type Company struct {
-	Base     base.Base       `gorm:"embedded"`
-	Name     string          `gorm:"column:name;size:128;not null;unique;"`
+	Base     base.Base       `gorm:"embedded" serialize:"id:Base.ID,created_at:Base.CreatedAt"`
+	Name     string          `gorm:"column:name;size:128;not null;unique;" serialize:"name"`
 	Branches []branch.Branch `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Agents   []agent.Agent   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 //Tabler for gorm get table name
-type Tabler interface {
-	TableName() string
-}
+// type Tabler interface {
+// 	TableName() string
+// }
 
 // TableName for change table name
-func (Company) TableName() string {
-	return "company"
-}
+// func (Company) TableName() string {
+// 	return "company"
+// }
 
 // BeforeCreate method run before every create call via the ORM.
-func (company *Company) BeforeCreate(db *gorm.DB) (err error) {
+func (c *Company) BeforeCreate(db *gorm.DB) (err error) {
 	uuid := uuid.NewV4()
 
 	log.Println("UUID IS GENERATED")
-	company.Base.ID = uuid
+	c.Base.ID = uuid
 	return
 }
 
 // Select by id ############################## //
-func (company *Company) Select(id string) error {
+func (c *Company) Select(id string) error {
 
 	// Chekc if all is digit or letter
 	sanitarize(id)
@@ -54,16 +54,16 @@ func (company *Company) Select(id string) error {
 	}
 
 	// SELECT * FROM users WHERE id = id;
-	result := initdb.DbInstance.First(&company, uid)
+	result := initdb.DbInstance.First(&c, uid)
 	if result.Error == nil {
-		initdb.DbInstance.Preload(clause.Associations).Find(company)
+		initdb.DbInstance.Preload(clause.Associations).Find(c)
 	}
 
 	return result.Error
 }
 
 // All all ############################## //
-func (company *Company) All(companies *[]Company) error {
+func (c *Company) All(companies *[]Company) error {
 	// SELECT * FROM users WHERE id = id;
 	result := initdb.DbInstance.Find(&companies)
 
@@ -80,8 +80,8 @@ func (company *Company) All(companies *[]Company) error {
 
 // Insert function is used to insert data into database
 // SECURITY ISSUES: NOT CHEKCED BEFORE INSERTION
-func (company *Company) Insert() error {
-	result := initdb.DbInstance.Create(company)
+func (c *Company) Insert() error {
+	result := initdb.DbInstance.Create(c)
 	log.Println("Created -> ", result)
 	return result.Error
 }
@@ -90,15 +90,15 @@ func (company *Company) Insert() error {
 
 // Update function is used to update data in the database
 // SECURITY ISSUES: NOT CHEKCED BEFORE UPDATE
-func (company *Company) Update() {
-	initdb.DbInstance.Save(&company)
-	log.Println("Updated -> ", company)
+func (c *Company) Update() {
+	initdb.DbInstance.Save(&c)
+	log.Println("Updated -> ", c)
 }
 
 // Delete function is used to delete data into database
-func (company *Company) Delete() {
-	initdb.DbInstance.Delete(&company)
-	log.Println("Deleted -> ", company)
+func (c *Company) Delete() {
+	initdb.DbInstance.Delete(&c)
+	log.Println("Deleted -> ", c)
 }
 
 func sanitarize(id string) {

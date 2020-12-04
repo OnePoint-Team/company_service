@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/OnePoint-Team/company_service/models/company"
+	"github.com/OnePoint-Team/company_service/pkg/serializer"
 	"github.com/OnePoint-Team/company_service/schemas"
 	"github.com/gin-gonic/gin"
-	"gopkg.in/go-playground/validator.v9"
 )
 
 // GetByID fetches company by id from database
@@ -20,14 +20,12 @@ func GetByID(c *gin.Context) {
 		log.Println(err)
 		return
 	}
-	validate := validator.New()
-	if err := validate.Struct(pathvar); err != nil {
-		c.SecureJSON(http.StatusBadRequest, gin.H{"message": "not found"})
-		return
-	}
 	err := companyObject.Select(pathvar.ID)
 
 	if err == nil {
+		// ###################
+		serializer.Schema(companyObject)
+
 		data := schemas.CompanySerializer(&companyObject)
 		c.JSON(http.StatusOK, data)
 	} else {

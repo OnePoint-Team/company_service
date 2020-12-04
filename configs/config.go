@@ -38,7 +38,7 @@ var Config config
 
 // DevConfig Development configuration
 func DevConfig() {
-	Config.DSN = "host=localhost  dbname=company_service port=5432 timezone=Asia/Baku"
+	Config.DSN = "host=localhost  dbname=company_service port=5432 timezone=Asia/Baku user=postgres password=postgres"
 	Config.Debug = true
 }
 
