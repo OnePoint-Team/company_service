@@ -16,7 +16,7 @@ import (
 
 //Company struct
 type Company struct {
-	Base     base.Base       `gorm:"embedded" serialize:"id:Base.ID,created_at:Base.CreatedAt"`
+	Base     base.Base       `gorm:"embedded" serialize:"id:Base.ID,created:Base.created"`
 	Name     string          `gorm:"column:name;size:128;not null;unique;" serialize:"name"`
 	Branches []branch.Branch `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Agents   []agent.Agent   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
@@ -31,6 +31,8 @@ type Company struct {
 // func (Company) TableName() string {
 // 	return "company"
 // }
+
+// Schema for change table name
 
 // BeforeCreate method run before every create call via the ORM.
 func (c *Company) BeforeCreate(db *gorm.DB) (err error) {
