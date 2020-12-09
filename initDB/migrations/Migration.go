@@ -21,12 +21,12 @@ func Migrate() {
 
 }
 
-func insertIntoCompany() {
+func InsertIntoCompany() {
 	c := company.Company{Name: "_(*(*^*;"}
 	c.Insert()
 }
 
-func insertIntoBranch() {
+func InsertIntoBranch() {
 
 	c := company.Company{}
 	b := branch.Branch{Name: "Baku"}

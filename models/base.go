@@ -11,4 +11,5 @@ type Base struct {
 	ID        uuid.UUID `gorm:"primary_key;type:uuid;"`
 	CreatedAt time.Time `gorm:"column:created" json:"created"`
 	UpdatedAt time.Time `gorm:"column:updated" json:"updated"`
+	Test      string    `responseSchema:"id"`
 }

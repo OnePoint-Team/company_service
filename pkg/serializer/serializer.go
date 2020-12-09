@@ -14,44 +14,42 @@ func convertStructToMap(i interface{}) map[string]interface{} {
 	return m
 }
 
-func splitter(s string) (string, string) {
-	arr := strings.Split(s, ":")
-	return arr[0], arr[1]
-}
-
-func outputSchema(jsonData, outputData map[string]interface{}, tagName string) {
-	tags := strings.Split(tagName, ",")
-
-	for _, v := range tags {
-		fmt.Println(v)
-		if strings.Contains(v, ":") {
-			key, val := splitter(v)
-			t := strings.Split(val, ".")
-			u := jsonData[t[0]]
-			y := u.(map[string]interface{})
-
-			outputData[key] = y[t[1]]
-
-			// outputData[key] =
-		}
-	}
+func splitter(s, delimeter string) []string {
+	arr := strings.Split(s, delimeter)
+	return arr
 }
 
 // Schema function
 func Schema(i interface{}) {
+	outPutSchema := make(map[string]interface{})
 	t := reflect.TypeOf(i)
-	jsonData := convertStructToMap(i)
-	fmt.Println(jsonData)
-	outputData := make(map[string]interface{})
-
+	v := reflect.ValueOf(i)
 	n := t.NumField()
 
 	for i := 0; i < n; i++ {
 		tt := t.Field(i)
-		tagName := tt.Tag.Get("serialize")
+
+		tagName := tt.Tag.Get("responseSchema")
 		if tagName != "" {
-			outputSchema(jsonData, outputData, tagName)
+			switch tt.Type.Kind() {
+			case reflect.Struct:
+
+				if strings.Contains(tagName, ",") {
+					for _, str := range strings.Split(tagName, ",") {
+						value := strings.Split(str, ":")
+						outPutSchema[value[0]] = v.Field(i).FieldByName(value[1]).Interface()
+					}
+				}
+
+			case reflect.String:
+				val := v.Field(i)
+				outPutSchema[tagName] = val
+			}
+
 		}
 	}
-	fmt.Println("output -> ", outputData)
+	fmt.Println(outPutSchema)
 }
+
+// tagName:  id:Base.ID,created:Base.created
+// v.Field(i) :  {f867fa47-ed88-44c0-9635-ff2ebf176231 0001-01-01 00:00:00 +0000 UTC 0001-01-01 00:00:00 +0000 UTC}

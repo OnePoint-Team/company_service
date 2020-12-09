@@ -30,7 +30,6 @@ func MappingUrls() *gin.Engine {
 }
 
 func main() {
-	// migrations.Migrate()
 
 	r := MappingUrls()
 
