@@ -30,13 +30,7 @@ func AgentSerializer(a agent.Agent) map[string]interface{} {
 func SerializeAllAgents(b []agent.Agent) []map[string]interface{} {
 	data := []map[string]interface{}{}
 	for _, v := range b {
-		temp := make(map[string]interface{})
-		temp["id"] = v.Base.ID
-		temp["created"] = v.Base.CreatedAt
-		temp["updated"] = v.Base.UpdatedAt
-		temp["branch_id"] = v.BranchID
-		temp["company_id"] = v.CompanyID
-		temp["user_id"] = v.UserID
+		temp := AgentSerializer(v)
 		data = append(data, temp)
 	}
 	return data

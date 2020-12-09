@@ -5,6 +5,7 @@ import (
 	"github.com/OnePoint-Team/company_service/routes/agents"
 	"github.com/OnePoint-Team/company_service/routes/branches"
 	"github.com/OnePoint-Team/company_service/routes/companies"
+	"github.com/OnePoint-Team/company_service/routes/lenders"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,6 +26,13 @@ func MappingUrls() *gin.Engine {
 		r.GET("/:cid/branches/:bid/agents/:aid", agents.GetAgentByID)
 		r.PUT("/:cid/branches/:bid/agents/:aid", agents.UpdateAgent)
 		r.DELETE("/:cid/branches/:bid/agents/:aid", agents.DeleteAgent)
+	}
+	l := router.Group("/lenders")
+	{
+		l.POST("/", lenders.CreateLender)
+		l.GET("/", lenders.GetAllLenders)
+		l.GET("/:lid", lenders.GetLender)
+		l.DELETE("/:lid", lenders.Delete)
 	}
 	return router
 }
