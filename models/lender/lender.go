@@ -34,6 +34,13 @@ func (l *Lender) BeforeCreate(DbInstance *gorm.DB) (err error) {
 	return
 }
 
+func checkExistLender(name string) error {
+	l := Lender{}
+	r := initdb.DbInstance.Table("lenders").Where(&Lender{Name: name}).First(&l)
+	log.Println("existing data -> ", l)
+	return r.Error
+}
+
 // Select quering for Lender
 func (l *Lender) Select(id string) error {
 	uid, err := uuid.FromString(id)
@@ -47,6 +54,9 @@ func (l *Lender) Select(id string) error {
 
 // Insert insert to db
 func (l *Lender) Insert() error {
+	if err := checkExistLender(l.Name); err == nil {
+		return err
+	}
 	result := initdb.DbInstance.Create(&l)
 	return result.Error
 }
@@ -55,4 +65,9 @@ func (l *Lender) Insert() error {
 func (l *Lender) All(lenders *[]Lender) error {
 	result := initdb.DbInstance.Find(lenders)
 	return result.Error
+}
+
+func (l *Lender) Delete() error {
+	r := initdb.DbInstance.Delete(&l)
+	return r.Error
 }

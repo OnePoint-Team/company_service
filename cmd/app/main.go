@@ -30,7 +30,9 @@ func MappingUrls() *gin.Engine {
 	l := router.Group("/lenders")
 	{
 		l.POST("/", lenders.CreateLender)
+		l.GET("/", lenders.GetAllLenders)
 		l.GET("/:lid", lenders.GetLender)
+		l.DELETE("/:lid", lenders.Delete)
 	}
 	return router
 }

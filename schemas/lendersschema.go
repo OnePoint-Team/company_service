@@ -22,3 +22,12 @@ func LenderSerializer(l lender.Lender) map[string]interface{} {
 
 	return m
 }
+
+func SerializeAllLenders(l []lender.Lender) []map[string]interface{} {
+	data := []map[string]interface{}{}
+	for _, v := range l {
+		temp := LenderSerializer(v)
+		data = append(data, temp)
+	}
+	return data
+}
