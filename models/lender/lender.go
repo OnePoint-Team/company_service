@@ -27,7 +27,7 @@ func (Lender) TableName() string {
 }
 
 // BeforeCreate method run before every create call via the ORM.
-func (l *Lender) BeforeCreate(DbInstance *gorm.DB) {
+func (l *Lender) BeforeCreate(DbInstance *gorm.DB) (err error) {
 	uuid := uuid.NewV4()
 	fmt.Println("UUID is generated")
 	l.Base.ID = uuid
