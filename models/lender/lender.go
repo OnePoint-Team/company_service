@@ -12,8 +12,8 @@ import (
 
 // Lender struct for loan companies
 type Lender struct {
-	Base base.Base `gorm:"embedded"`
-	Name string    `gorm:"column:name" json:"name"`
+	base.Base
+	Name string `gorm:"column:name" json:"name"`
 }
 
 // Tabler for gorm get table name

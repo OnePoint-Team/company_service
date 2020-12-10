@@ -16,21 +16,21 @@ import (
 
 //Company struct
 type Company struct {
-	Base     base.Base       `gorm:"embedded" responseSchema:"id:ID,created:CreatedAt"`
-	Name     string          `gorm:"column:name;size:128;not null;unique;" responseSchema:"name"`
-	Branches []branch.Branch `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" responseSchema:"branches:Name"`
-	Agents   []agent.Agent   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	base.Base                 //`gorm:"embedded" responseSchema:"id:ID,created:CreatedAt"`
+	Name      string          `gorm:"column:name;size:128;not null;unique;" json:"name"`
+	Branches  []branch.Branch `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Agents    []agent.Agent   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 //Tabler for gorm get table name
-// type Tabler interface {
-// 	TableName() string
-// }
+type Tabler interface {
+	TableName() string
+}
 
 // TableName for change table name
-// func (Company) TableName() string {
-// 	return "company"
-// }
+func (Company) TableName() string {
+	return "company"
+}
 
 // Schema for change table name
 

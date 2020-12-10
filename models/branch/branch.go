@@ -15,8 +15,8 @@ import (
 
 // Branch struct
 type Branch struct {
-	Base      base.Base     `gorm:"embedded"`
-	Name      string        `gorm:"column:name;size:128;not null;"`
+	base.Base
+	Name      string        `gorm:"column:name;size:128;not null;" json:"name"`
 	CompanyID uuid.UUID     `json:"company_id"`
 	Agents    []agent.Agent `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
@@ -32,15 +32,15 @@ func (b *Branch) BeforeCreate(db *gorm.DB) (err error) {
 	return
 }
 
-// //Tabler for gorm get table name
-// type Tabler interface {
-// 	TableName() string
-// }
+// Tabler for gorm get table name
+type Tabler interface {
+	TableName() string
+}
 
-// // TableName for change table name
-// func (Branch) TableName() string {
-// 	return "branch"
-// }
+// TableName for change table name
+func (Branch) TableName() string {
+	return "branch"
+}
 
 // Insert function is used to insert data into database
 // SECURITY ISSUES: NOT CHEKCED BEFORE INSERTION

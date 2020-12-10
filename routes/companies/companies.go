@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/OnePoint-Team/company_service/models/company"
-	"github.com/OnePoint-Team/company_service/pkg/serializer"
 	"github.com/OnePoint-Team/company_service/schemas"
 	"github.com/gin-gonic/gin"
 )
@@ -24,10 +23,12 @@ func GetByID(c *gin.Context) {
 
 	if err == nil {
 		// ###################
-		serializer.Schema(companyObject)
+		// serializer.Schema(companyObject)
 
-		data := schemas.CompanySerializer(&companyObject)
-		c.JSON(http.StatusOK, data)
+		// data := schemas.CompanySerializer(&companyObject)
+
+		// serializer.Schema(companyObject)
+		c.JSON(http.StatusOK, companyObject)
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"message": "not found"})
 	}
@@ -41,8 +42,10 @@ func GetCompanies(c *gin.Context) {
 	err := companyObject.All(&companies)
 
 	if err == nil {
-		data := schemas.CompaniesSerializer(&companies)
-		c.JSON(http.StatusOK, data)
+		// data := []map[string]interface{}{}
+		// data := schemas.CompaniesSerializer(&companies)
+
+		c.JSON(http.StatusOK, companies)
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"message": "not found"})
 	}
@@ -68,8 +71,8 @@ func CreateCompanies(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Failed to create"})
 	} else {
-		data := schemas.CompanySerializer(&company)
-		c.JSON(http.StatusOK, data)
+		// data := schemas.CompanySerializer(&company)
+		c.JSON(http.StatusOK, company)
 	}
 
 }
