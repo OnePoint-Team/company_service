@@ -2,7 +2,6 @@ package migrations
 
 import (
 	"fmt"
-
 	"github.com/OnePoint-Team/company_service/initdb"
 	"github.com/OnePoint-Team/company_service/models/agent"
 	"github.com/OnePoint-Team/company_service/models/branch"
@@ -12,7 +11,9 @@ import (
 // Migrate migrate db
 func Migrate() {
 	// Migration
-	err := initdb.DbInstance.AutoMigrate(&company.Company{}, &branch.Branch{}, &agent.Agent{})
+	var models = []interface{}{&company.Company{}, &branch.Branch{}, &agent.Agent{}}
+	
+	err := initdb.DbInstance.AutoMigrate(models...)
 
 	if err != nil {
 		panic(err)
@@ -34,7 +35,7 @@ func InsertIntoBranch() {
 	initdb.DbInstance.First(&c)
 	b.CompanyID = c.Base.ID
 
-	b.Insert()
+	// b.Insert()
 }
 
 func selectTest() {

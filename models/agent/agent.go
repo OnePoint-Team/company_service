@@ -40,8 +40,8 @@ func (a *Agent) BeforeCreate(DbInstance *gorm.DB) (err error) {
 	return
 }
 
-// Insert function is used to insert data into database
-// SECURITY ISSUES: NOT CHEKCED BEFORE INSERTION
+/* Insert function is used to insert data into database
+ SECURITY ISSUES: NOT CHEKCED BEFORE INSERTION */
 func (a *Agent) Insert(cid, bid, uid string) error {
 	if err := checkExistAgent(cid, bid, uid); err == nil {
 		log.Println("agent exist")

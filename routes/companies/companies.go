@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/OnePoint-Team/company_service/models/company"
-	"github.com/OnePoint-Team/company_service/pkg/serializer"
 	"github.com/OnePoint-Team/company_service/schemas"
 	"github.com/gin-gonic/gin"
 )
@@ -24,10 +23,10 @@ func GetByID(c *gin.Context) {
 
 	if err == nil {
 		// ###################
-		serializer.Schema(companyObject)
+		// serializer.Schema(companyObject)
 
-		data := schemas.CompanySerializer(&companyObject)
-		c.JSON(http.StatusOK, data)
+		// data := schemas.CompanySerializer(&companyObject)
+		c.JSON(http.StatusOK, companyObject)
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"message": "not found"})
 	}
@@ -54,9 +53,11 @@ func CreateCompanies(c *gin.Context) {
 	var input schemas.CompanyCreate
 	// var obj map[string]interface{}
 	// err := json.Unmarshal(body, &obj)
-
 	if err := c.ShouldBindJSON(&input); err != nil {
 		log.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Failed to create",
+			"reason": c.Error(err)})
+
 		return
 	}
 

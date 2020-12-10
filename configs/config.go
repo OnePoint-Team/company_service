@@ -27,6 +27,7 @@ func (c *config) initDefaults() {
 	if host := os.Getenv("HOST"); host != "" {
 		Config.Host = host
 	} else {
+
 		host, _ := reflect.TypeOf(Config).FieldByName("Host")
 		Config.Host = host.Tag.Get("default")
 	}
@@ -57,3 +58,6 @@ func init() {
 		Config.initDefaults()
 	}
 }
+
+
+// operation type name created updated , 

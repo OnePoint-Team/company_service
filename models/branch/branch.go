@@ -37,7 +37,7 @@ func (b *Branch) BeforeCreate(db *gorm.DB) (err error) {
 // 	TableName() string
 // }
 
-// // TableName for change table name
+// TableName for change table name
 // func (Branch) TableName() string {
 // 	return "branch"
 // }

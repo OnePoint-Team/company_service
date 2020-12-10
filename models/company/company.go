@@ -16,7 +16,7 @@ import (
 
 //Company struct
 type Company struct {
-	Base     base.Base       `gorm:"embedded" responseSchema:"id:ID,created:CreatedAt"`
+	base.Base           //`gorm:"embedded" responseSchema:"id:ID,created:CreatedAt"`
 	Name     string          `gorm:"column:name;size:128;not null;unique;" responseSchema:"name"`
 	Branches []branch.Branch `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" responseSchema:"branches:Name"`
 	Agents   []agent.Agent   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
