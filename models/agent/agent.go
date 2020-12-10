@@ -13,7 +13,7 @@ import (
 
 // Agent struct
 type Agent struct {
-	Base      base.Base `gorm:"embedded"`
+	base.Base
 	CompanyID uuid.UUID `gorm:"column:company_id" json:"company_id"`
 	BranchID  uuid.UUID `gorm:"column:branch_id" json:"branch_id"`
 	UserID    uuid.UUID `gorm:"column:user_id" json:"user_id"`
