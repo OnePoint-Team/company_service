@@ -11,7 +11,7 @@ import (
 type config struct {
 	DSN   string
 	Debug bool
-	Port  string `default:"80"`
+	Port  string `default:"8000"`
 	Host  string `default:"localhost"`
 }
 
