@@ -1,6 +1,7 @@
 package companies
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -9,7 +10,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+
+
+type Response struct {
+	Message string `json:"message"`
+}
+
+
 // GetByID fetches company by id from database
+// @Summary fetches company by id from database
+// @Description fetches company by id from database
+// @ID get-string-by-int
+// @Tags companies
+// @Param   id path string true  "ID" Format(uuid)
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} company.Company
+// @Router /companies/{id} [get]
 func GetByID(c *gin.Context) {
 	companyObject := company.Company{}
 	var pathvar schemas.CompanyPathVar
@@ -35,6 +52,13 @@ func GetByID(c *gin.Context) {
 }
 
 // GetCompanies fetches all companies from database
+// @Summary Gets all companies
+// @Description Gets all companies
+// @Tags companies
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} company.Company
+// @Router /companies [get]
 func GetCompanies(c *gin.Context) {
 	companyObject := company.Company{}
 	var companies []company.Company
@@ -52,13 +76,25 @@ func GetCompanies(c *gin.Context) {
 }
 
 // CreateCompanies gets
+// @Summary Create Company
+// @Description Create Company
+// @Tags companies
+// @Consume application/json
+// @Param company body schemas.CompanyCreate true "Create Company"
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} company.Company
+// @Router /companies [post]
 func CreateCompanies(c *gin.Context) {
 	// body, _ := ioutil.ReadAll(c.Request.Body)
 	var input schemas.CompanyCreate
 	// var obj map[string]interface{}
 	// err := json.Unmarshal(body, &obj)
+	fmt.Println(input)
+
 	if err := c.ShouldBindJSON(&input); err != nil {
-		log.Println(err)
+
+
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Failed to create",
 			"reason": c.Error(err)})
 

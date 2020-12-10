@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/OnePoint-Team/company_service/configs"
+	"github.com/OnePoint-Team/company_service/docs"
 	"github.com/OnePoint-Team/company_service/initdb"
 	"github.com/OnePoint-Team/company_service/initdb/migrations"
 	"github.com/OnePoint-Team/company_service/routes/agents"
@@ -9,9 +10,9 @@ import (
 	"github.com/OnePoint-Team/company_service/routes/companies"
 	"github.com/OnePoint-Team/company_service/routes/lenders"
 	"github.com/gin-gonic/gin"
-	
+	swaggerFiles "github.com/swaggo/files"     // swagger embed files
+	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 	// "github.com/OnePoint-Team/company_service/middleware"
-
 )
 
 // MappingUrls map url to group
@@ -21,14 +22,13 @@ func MappingUrls() *gin.Engine {
 	// router := gin.New()
 	// router.Use(gin.Recovery(), middleware.Logger())
 
-	
 	router := gin.Default()
 	r := router.Group("/companies")
 	{
 		r.GET("/", companies.GetCompanies)
 		r.POST("/", companies.CreateCompanies)
 		r.GET("/:cid", companies.GetByID)
-		
+
 		r.POST("/:cid/branches", branches.CreateBranch)
 		r.GET("/:cid/branches", branches.GetBranches)
 		r.GET("/:cid/branches/:bid", branches.GetBranchByID)
@@ -46,10 +46,19 @@ func MappingUrls() *gin.Engine {
 		l.GET("/:lid", lenders.GetLender)
 		l.DELETE("/:lid", lenders.Delete)
 	}
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	return router
 }
 
 func main() {
+
+	docs.SwaggerInfo.Title = "Company Service "
+	docs.SwaggerInfo.Description = "Company Service "
+	docs.SwaggerInfo.Version = "2.0"
+	docs.SwaggerInfo.Host = "localhost:8000"
+	docs.SwaggerInfo.BasePath = ""
+	docs.SwaggerInfo.Schemes = []string{"http"}
 
 	defer initdb.CloseDB(initdb.DbInstance)
 
@@ -60,5 +69,3 @@ func main() {
 	r.Run(configs.Config.Host + ":" + configs.Config.Port)
 
 }
-
-
