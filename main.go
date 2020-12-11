@@ -56,7 +56,7 @@ func main() {
 	docs.SwaggerInfo.Title = "Company Service "
 	docs.SwaggerInfo.Description = "Company Service "
 	docs.SwaggerInfo.Version = "2.0"
-	docs.SwaggerInfo.Host = "localhost:8000"
+	docs.SwaggerInfo.Host = configs.Config.Host + ":" + configs.Config.Port
 	docs.SwaggerInfo.BasePath = ""
 	docs.SwaggerInfo.Schemes = []string{"http"}
 

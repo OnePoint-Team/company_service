@@ -47,7 +47,7 @@ func (c *Company) BeforeCreate(db *gorm.DB) (err error) {
 func (c *Company) Select(id string) error {
 
 	// Chekc if all is digit or letter
-	sanitarize(id)
+	// sanitarize(id)
 
 	uid, err := uuid.FromString(id)
 	if err != nil {
