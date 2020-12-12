@@ -9,6 +9,8 @@ import (
 	"github.com/OnePoint-Team/company_service/routes/branches"
 	"github.com/OnePoint-Team/company_service/routes/companies"
 	"github.com/OnePoint-Team/company_service/routes/lenders"
+	"github.com/OnePoint-Team/company_service/routes/operators"
+
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"     // swagger embed files
 	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
@@ -38,6 +40,7 @@ func MappingUrls() *gin.Engine {
 		r.GET("/:cid/branches/:bid/agents/:aid", agents.GetAgentByID)
 		r.PUT("/:cid/branches/:bid/agents/:aid", agents.UpdateAgent)
 		r.DELETE("/:cid/branches/:bid/agents/:aid", agents.DeleteAgent)
+
 	}
 	l := router.Group("/lenders")
 	{
@@ -45,6 +48,16 @@ func MappingUrls() *gin.Engine {
 		l.GET("/", lenders.GetAllLenders)
 		l.GET("/:lid", lenders.GetLender)
 		l.DELETE("/:lid", lenders.Delete)
+	}
+	o := router.Group("/operators")
+	{
+		o.GET("/", operators.GetOperators)
+		o.GET("/:oid", operators.GetOneOperator)
+
+		o.POST("/:lid", operators.CreateOperator)
+		o.PUT("/:oid", operators.UpdateOperator)
+		o.DELETE("/:oid", operators.DeleteOperator)
+
 	}
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

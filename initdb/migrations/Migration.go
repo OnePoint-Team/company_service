@@ -2,17 +2,20 @@ package migrations
 
 import (
 	"fmt"
+
 	"github.com/OnePoint-Team/company_service/initdb"
 	"github.com/OnePoint-Team/company_service/models/agent"
 	"github.com/OnePoint-Team/company_service/models/branch"
 	"github.com/OnePoint-Team/company_service/models/company"
+	"github.com/OnePoint-Team/company_service/models/lender"
+	"github.com/OnePoint-Team/company_service/models/operators"
 )
 
 // Migrate migrate db
 func Migrate() {
-	// Migration
-	var models = []interface{}{&company.Company{}, &branch.Branch{}, &agent.Agent{}}
-	
+
+	var models = []interface{}{&company.Company{}, &branch.Branch{}, &agent.Agent{},&lender.Lender{}, &operators.Operators{}}
+
 	err := initdb.DbInstance.AutoMigrate(models...)
 
 	if err != nil {

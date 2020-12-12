@@ -9,6 +9,7 @@ require (
 	github.com/dlclark/regexp2 v1.4.0 // indirect
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-openapi/spec v0.20.0 // indirect
+	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/inancgumus/godocc v0.0.0-20190905213726-069c51ef9565 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
